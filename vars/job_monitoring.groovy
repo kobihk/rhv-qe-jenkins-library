@@ -125,6 +125,9 @@ def call(Map config = [:]) {
     if (build_status) {
       def (description, dummy) = build_info(response, build_status)
       def strategy_arg = strategy ? "strategy=${strategy}" : ""  // No strategy - no Jira ticket
+      if (build_name.contains("RHVH")) {
+        description = description.replace(build_name.find("-4.[0-9]+"),build_name.split("rhv")[1])
+      }
       sh """
         ${rhevm_qe_infra_dir}/scripts/production-monitoring/pygsheets-env.sh \
           ${build_name} \
